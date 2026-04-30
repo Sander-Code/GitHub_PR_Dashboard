@@ -16,6 +16,8 @@
       --badge-rev-bg: #ddf4ff;  --badge-rev-txt: #0550ae;  --badge-rev-bdr: #b6e3ff;
       --badge-app-bg: #dafbe1;  --badge-app-txt: #116329;  --badge-app-bdr: #aceebb;
       --badge-warn-bg:#fff8c5;  --badge-warn-txt:#7d4e00;  --badge-warn-bdr:#f1e05a;
+      --badge-cr-bg: #ffebe9;   --badge-cr-txt: #a40000;   --badge-cr-bdr: #ffcecb;
+      --badge-pending-bg:#f0f2f5; --badge-pending-txt:#636c76; --badge-pending-bdr:#d0d7de;
       --input-bg: #f6f8fa;
     }
     :root[data-theme="dark"] {
@@ -27,22 +29,21 @@
       --badge-rev-bg: #033d6b;  --badge-rev-txt: #79c0ff;  --badge-rev-bdr: #1158a9;
       --badge-app-bg: #0d3e1a;  --badge-app-txt: #3fb950;  --badge-app-bdr: #1a5926;
       --badge-warn-bg:#3b2a00;  --badge-warn-txt:#e3b341;  --badge-warn-bdr:#5a3e00;
+      --badge-cr-bg: #5c1118;   --badge-cr-txt: #ff9a9a;   --badge-cr-bdr: #8e1c23;
+      --badge-pending-bg:#21262d; --badge-pending-txt:#8b949e; --badge-pending-bdr:#30363d;
       --input-bg: #0d1117;
     }
 
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; min-height: 100vh; }
 
-    /* Header */
     header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 10px; }
     header svg { flex-shrink: 0; }
     header .title { font-size: 15px; font-weight: 600; flex: 1; }
     .theme-btn { background: none; border: 1px solid var(--border); border-radius: 6px; color: var(--text-muted); cursor: pointer; padding: 5px 10px; font-size: 13px; display: flex; align-items: center; gap: 5px; }
     .theme-btn:hover { background: var(--surface2); color: var(--text); }
 
-    /* Container */
     .container { max-width: 960px; margin: 0 auto; padding: 24px 20px; }
 
-    /* Token bar */
     .token-bar { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; display: flex; gap: 10px; align-items: center; margin-bottom: 20px; }
     .token-bar label { font-weight: 500; white-space: nowrap; color: var(--text-muted); font-size: 13px; }
     .token-bar input { flex: 1; font-family: monospace; font-size: 13px; padding: 7px 12px; background: var(--input-bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); outline: none; }
@@ -51,7 +52,6 @@
     .token-bar button:hover { opacity: .88; }
     .token-bar button:disabled { opacity: .5; cursor: default; }
 
-    /* Tabs */
     .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
     .tab { padding: 10px 18px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; background: transparent; color: var(--text-muted); border-bottom: 2px solid transparent; margin-bottom: -1px; display: flex; align-items: center; gap: 7px; }
     .tab.active { color: var(--text); border-bottom-color: var(--accent); }
@@ -59,7 +59,6 @@
     .tab .count { background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 0 7px; font-size: 11px; font-weight: 600; color: var(--text-muted); min-width: 20px; text-align: center; }
     .tab.active .count { background: var(--accent); color: #fff; border-color: transparent; }
 
-    /* Filter bar */
     .filter-bar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
     .filter-bar input[type=search] { flex: 1; min-width: 180px; padding: 7px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 13px; outline: none; }
     .filter-bar input[type=search]:focus { border-color: var(--accent); }
@@ -67,9 +66,7 @@
     .filter-bar select:focus { border-color: var(--accent); }
     .filter-count { font-size: 12px; color: var(--text-hint); white-space: nowrap; margin-left: auto; }
 
-    /* PR list */
     .pr-list { display: flex; flex-direction: column; gap: 10px; }
-
     .pr-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; transition: border-color .15s; }
     .pr-card:hover { border-color: var(--accent); }
     .pr-card.hidden { display: none; }
@@ -86,19 +83,18 @@
     [data-theme="dark"] .pr-time-row.old { color: #ff7b72; }
     .pr-time-label { font-size: 10px; text-transform: uppercase; letter-spacing: .4px; color: var(--text-hint); display: block; text-align: right; }
 
-    /* Repo label */
     .repo-label { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; border: 1px solid transparent; }
-
     .pr-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
 
-    /* Badges */
     .badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 20px; font-size: 12px; font-weight: 500; border: 1px solid transparent; }
-    .badge-block  { background: var(--badge-block-bg); color: var(--badge-block-txt); border-color: var(--badge-block-bdr); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 340px; }
-    .badge-ok     { background: var(--badge-ok-bg);    color: var(--badge-ok-txt);    border-color: var(--badge-ok-bdr); }
-    .badge-review { background: var(--badge-rev-bg);   color: var(--badge-rev-txt);   border-color: var(--badge-rev-bdr); }
-    .badge-app    { background: var(--badge-app-bg);   color: var(--badge-app-txt);   border-color: var(--badge-app-bdr); }
-    .badge-warn   { background: var(--badge-warn-bg);  color: var(--badge-warn-txt);  border-color: var(--badge-warn-bdr); }
-    .badge-neutral{ background: var(--surface2); color: var(--text-muted); border-color: var(--border); }
+    .badge-block    { background: var(--badge-block-bg); color: var(--badge-block-txt); border-color: var(--badge-block-bdr); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 340px; }
+    .badge-ok       { background: var(--badge-ok-bg);    color: var(--badge-ok-txt);    border-color: var(--badge-ok-bdr); }
+    .badge-review   { background: var(--badge-rev-bg);   color: var(--badge-rev-txt);   border-color: var(--badge-rev-bdr); }
+    .badge-app      { background: var(--badge-app-bg);   color: var(--badge-app-txt);   border-color: var(--badge-app-bdr); }
+    .badge-warn     { background: var(--badge-warn-bg);  color: var(--badge-warn-txt);  border-color: var(--badge-warn-bdr); }
+    .badge-neutral  { background: var(--surface2); color: var(--text-muted); border-color: var(--border); }
+    .badge-cr       { background: var(--badge-cr-bg);    color: var(--badge-cr-txt);    border-color: var(--badge-cr-bdr); }
+    .badge-pending  { background: var(--badge-pending-bg); color: var(--badge-pending-txt); border-color: var(--badge-pending-bdr); }
 
     .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
     .dot-ok { background: #2da44e; } .dot-fail { background: #cf222e; } .dot-pending { background: #bf8700; } .dot-skip { background: #8c959f; }
@@ -107,7 +103,6 @@
     .section-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: var(--text-hint); margin-bottom: 5px; }
     .check-list { display: flex; flex-wrap: wrap; gap: 5px; }
 
-    /* State messages */
     .state-msg { padding: 40px 20px; text-align: center; color: var(--text-muted); font-size: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; }
     .state-msg.error { color: var(--badge-block-txt); background: var(--badge-block-bg); border-color: var(--badge-block-bdr); }
 
@@ -115,7 +110,6 @@
     @keyframes spin { to { transform: rotate(360deg); } }
 
     footer { text-align: center; color: var(--text-hint); font-size: 12px; padding: 28px 0 16px; }
-
     .no-results { text-align: center; color: var(--text-hint); font-size: 13px; padding: 30px; display: none; }
   </style>
 </head>
@@ -146,7 +140,6 @@
     <button class="tab"        id="tabInvited" onclick="switchTab('invited')">Review requests <span class="count" id="cntInvited">—</span></button>
   </div>
 
-  <!-- filter bars -->
   <div class="filter-bar" id="filterMine" style="display:none">
     <input type="search" id="searchMine" placeholder="Search title, repo…" oninput="applyFilters('mine')" />
     <select id="repoMine" onchange="applyFilters('mine')"><option value="">All repos</option></select>
@@ -175,9 +168,19 @@
 <footer>All data is fetched directly from the GitHub API — your token is never stored or sent anywhere else.</footer>
 
 <script>
-/* ── state ─────────────────────────────────────────────────── */
-let TOKEN = '', ME = '';
-let prData = { mine: [], invited: [] }; // raw card data for filtering
+/* ── FIX 1: token + username in een closure, niet globaal ───── */
+const state = (() => {
+  let _token = '', _me = '';
+  return {
+    get token() { return _token; },
+    set token(v) { _token = v; },
+    get me() { return _me; },
+    set me(v) { _me = v; },
+    clear() { _token = ''; _me = ''; }
+  };
+})();
+
+let prData = { mine: [], invited: [] };
 
 /* ── utils ──────────────────────────────────────────────────── */
 const $ = id => document.getElementById(id);
@@ -206,13 +209,12 @@ function toggleTheme() {
   const saved = localStorage.getItem('gh-dash-theme') ||
     (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
   html.dataset.theme = saved;
-  // set button text after DOM ready
   window.addEventListener('DOMContentLoaded', () => {
     $('themeBtn').textContent = saved === 'dark' ? '☀️ Light' : '🌙 Dark';
   });
 })();
 
-/* ── repo label colours ──────────────────────────────────────── */
+/* ── repo label colours ─────────────────────────────────────── */
 const REPO_PALETTES = [
   ['#dbeafe','#1e40af','#93c5fd'], ['#fce7f3','#9d174d','#f9a8d4'],
   ['#d1fae5','#065f46','#6ee7b7'], ['#fef3c7','#92400e','#fcd34d'],
@@ -230,9 +232,7 @@ const DARK_REPO_PALETTES = [
 const repoColorMap = {};
 let repoColorIdx = 0;
 function getRepoStyle(repoFull) {
-  if (!repoColorMap[repoFull]) {
-    repoColorMap[repoFull] = repoColorIdx++ % 10;
-  }
+  if (repoColorMap[repoFull] === undefined) repoColorMap[repoFull] = repoColorIdx++ % 10;
   const idx = repoColorMap[repoFull];
   const dark = html.dataset.theme === 'dark';
   const [bg, txt, bdr] = dark ? DARK_REPO_PALETTES[idx] : REPO_PALETTES[idx];
@@ -240,23 +240,25 @@ function getRepoStyle(repoFull) {
 }
 function repoLabelHtml(owner, repo) {
   const full = owner + '/' + repo;
-  // Use data attribute so colour updates on theme toggle
   return `<span class="repo-label" data-repo="${esc(full)}" style="${getRepoStyle(full)}">${esc(owner)}/${esc(repo)}</span>`;
 }
 function refreshRepoColors() {
-  document.querySelectorAll('[data-repo]').forEach(el => {
-    el.style.cssText = getRepoStyle(el.dataset.repo);
-  });
+  document.querySelectorAll('[data-repo]').forEach(el => { el.style.cssText = getRepoStyle(el.dataset.repo); });
 }
 
-/* ── GitHub API ─────────────────────────────────────────────── */
+/* ── FIX 2: één gh() definitie, gebruikt state.token ────────── */
 async function gh(path) {
   const r = await fetch('https://api.github.com' + path, {
-    headers: { Authorization: 'token ' + TOKEN, Accept: 'application/vnd.github+json' }
+    headers: {
+      Authorization: 'Bearer ' + state.token,
+      Accept: 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28'
+    }
   });
   if (!r.ok) throw new Error('GitHub API error: ' + r.status + ' ' + r.statusText);
   return r.json();
 }
+
 async function searchPRs(q) {
   const d = await gh('/search/issues?q=' + encodeURIComponent(q) + '&per_page=50&sort=updated');
   return d.items || [];
@@ -270,9 +272,36 @@ async function getPRDetail(o, r, n) {
 async function getProtection(o, r, branch) {
   try { return await gh('/repos/'+o+'/'+r+'/branches/'+encodeURIComponent(branch)+'/protection'); } catch { return null; }
 }
-async function getChecks(o, r, sha) {
-  try { const d = await gh('/repos/'+o+'/'+r+'/commits/'+sha+'/check-runs?per_page=50'); return d.check_runs||[]; } catch { return []; }
+
+/* ── FIX 3: GitHub Actions workflow runs i.p.v. Checks API ──── */
+async function getWorkflowRuns(o, r, sha) {
+  try {
+    // Haal de laatste runs op voor deze repo en filter daarna op head_sha
+    const d = await gh('/repos/'+o+'/'+r+'/actions/runs?per_page=50&head_sha='+sha);
+    return d.workflow_runs || [];
+  } catch { return []; }
 }
+
+function workflowBadge(run) {
+  const name = esc(run.name || run.display_title || 'Workflow');
+  const status = run.status;      // queued | in_progress | completed
+  const conclusion = run.conclusion; // success | failure | cancelled | skipped | null
+
+  if (status !== 'completed') {
+    return `<span class="badge badge-warn"><span class="dot dot-pending"></span>${name} (running)</span>`;
+  }
+  if (conclusion === 'success') {
+    return `<span class="badge badge-ok"><span class="dot dot-ok"></span>${name}</span>`;
+  }
+  if (conclusion === 'failure' || conclusion === 'timed_out') {
+    return `<span class="badge badge-block"><span class="dot dot-fail"></span>${name}</span>`;
+  }
+  if (conclusion === 'skipped' || conclusion === 'neutral' || conclusion === 'cancelled') {
+    return `<span class="badge badge-neutral"><span class="dot dot-skip"></span>${name}</span>`;
+  }
+  return `<span class="badge badge-warn"><span class="dot dot-pending"></span>${name}</span>`;
+}
+
 function blockingRules(prot, approvals) {
   if (!prot) return [];
   const rules = [];
@@ -289,15 +318,32 @@ function blockingRules(prot, approvals) {
 function repoFromUrl(url) {
   return url.replace('https://api.github.com/repos/', '').split('/').slice(0,2);
 }
-function checkBadge(c) {
-  const name = esc(c.name);
-  if (c.conclusion === 'success')
-    return `<span class="badge badge-ok"><span class="dot dot-ok"></span>${name}</span>`;
-  if (c.conclusion === 'failure' || c.conclusion === 'timed_out')
-    return `<span class="badge badge-block"><span class="dot dot-fail"></span>${name}</span>`;
-  if (c.conclusion === 'skipped' || c.conclusion === 'neutral')
-    return `<span class="badge badge-neutral"><span class="dot dot-skip"></span>${name}</span>`;
-  return `<span class="badge badge-warn"><span class="dot dot-pending"></span>${name}</span>`;
+
+/* ── FIX 4: eigen reviewstatus bepalen ─────────────────────── */
+function myReviewStatus(reviews, me) {
+  // Meest recente niet-gedismissed review van mezelf
+  const mine = reviews
+    .filter(r => r.user?.login === me && r.state !== 'DISMISSED')
+    .sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at));
+
+  if (!mine.length) return null;
+  return mine[0].state; // APPROVED | CHANGES_REQUESTED | COMMENTED
+}
+
+function myReviewBadge(status) {
+  if (status === null) {
+    return `<span class="badge badge-pending">⏳ Not reviewed yet</span>`;
+  }
+  if (status === 'APPROVED') {
+    return `<span class="badge badge-ok">✓ You approved</span>`;
+  }
+  if (status === 'CHANGES_REQUESTED') {
+    return `<span class="badge badge-cr">✗ You requested changes</span>`;
+  }
+  if (status === 'COMMENTED') {
+    return `<span class="badge badge-review">💬 You commented</span>`;
+  }
+  return '';
 }
 
 /* ── filters ─────────────────────────────────────────────────── */
@@ -319,20 +365,15 @@ function applyFilters(tab) {
   const sort = sortEl.value;
 
   let items = prData[tab].slice();
-
-  // filter
   items = items.filter(d => {
     if (repo && d.repoFull !== repo) return false;
     if (q && !d.searchText.includes(q)) return false;
     return true;
   });
-
-  // sort
   if (sort === 'newest')   items.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
   if (sort === 'oldest')   items.sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt));
   if (sort === 'activity') items.sort((a,b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
-  // re-render cards in order
   const list = document.getElementById(tab).querySelector('.pr-list');
   if (!list) return;
   const cards = list.querySelectorAll('.pr-card');
@@ -346,9 +387,13 @@ function applyFilters(tab) {
   });
 
   let noRes = list.parentElement.querySelector('.no-results');
-  if (!noRes) { noRes = document.createElement('div'); noRes.className = 'no-results'; list.parentElement.appendChild(noRes); noRes.textContent = 'No results match your filters.'; }
+  if (!noRes) {
+    noRes = document.createElement('div');
+    noRes.className = 'no-results';
+    list.parentElement.appendChild(noRes);
+    noRes.textContent = 'No results match your filters.';
+  }
   noRes.style.display = visibleNums.size === 0 ? 'block' : 'none';
-
   fcEl.textContent = `${visibleNums.size} of ${prData[tab].length}`;
   refreshRepoColors();
 }
@@ -367,7 +412,7 @@ function switchTab(id) {
 /* ── load mine ───────────────────────────────────────────────── */
 async function loadMine() {
   $('mine').innerHTML = '<div class="state-msg"><span class="spinner"></span>Fetching your PRs…</div>';
-  const items = await searchPRs('is:pr is:open author:' + ME);
+  const items = await searchPRs('is:pr is:open author:' + state.me);
   $('cntMine').textContent = items.length;
   if (!items.length) { $('mine').innerHTML = '<div class="state-msg">No open PRs found.</div>'; return; }
 
@@ -377,20 +422,22 @@ async function loadMine() {
     const approvals = reviews.filter(r => r.state === 'APPROVED').length;
     const uniqueReviewers = new Set(reviews.filter(r => r.state !== 'DISMISSED').map(r => r.user?.login)).size;
     let blocking = [];
-    if (detail?.head?.ref) {
-      const prot = await getProtection(owner, repo, detail.head.ref);
+    if (detail?.base?.ref) {
+      const prot = await getProtection(owner, repo, detail.base.ref);
       blocking = blockingRules(prot, approvals);
     }
     const repoFull = owner + '/' + repo;
     const updatedAt = pr.updated_at || pr.created_at;
-    return { num: String(pr.number), repoFull, searchText: (pr.title + ' ' + repoFull).toLowerCase(),
+    return {
+      num: String(pr.number), repoFull,
+      searchText: (pr.title + ' ' + repoFull).toLowerCase(),
       createdAt: pr.created_at, updatedAt,
-      html: buildMineCard(pr, owner, repo, approvals, uniqueReviewers, blocking, updatedAt) };
+      html: buildMineCard(pr, owner, repo, approvals, uniqueReviewers, blocking, updatedAt)
+    };
   }));
 
   prData.mine = rows;
-  const listHtml = '<div class="pr-list" style="display:flex;flex-direction:column;gap:10px">' + rows.map(r => r.html).join('') + '</div>';
-  $('mine').innerHTML = listHtml;
+  $('mine').innerHTML = '<div class="pr-list" style="display:flex;flex-direction:column;gap:10px">' + rows.map(r => r.html).join('') + '</div>';
   populateRepoFilter('mine');
   $('filterMine').style.display = 'flex';
   applyFilters('mine');
@@ -398,8 +445,8 @@ async function loadMine() {
 
 function buildMineCard(pr, owner, repo, approvals, uniqueReviewers, blocking, updatedAt) {
   const blockHtml = blocking.length
-    ? blocking.map(b => `<span class="badge badge-block" title="${esc(b)}">&#9888; ${esc(b)}</span>`).join('')
-    : '<span class="badge badge-ok">&#10003; No blockers found</span>';
+    ? blocking.map(b => `<span class="badge badge-block" title="${esc(b)}">⚠ ${esc(b)}</span>`).join('')
+    : '<span class="badge badge-ok">✓ No blockers found</span>';
   const ageOld = isOld(pr.created_at) ? ' old' : '';
   const actOld = isOld(updatedAt) ? ' old' : '';
   return `<div class="pr-card" data-num="${pr.number}" data-created="${pr.created_at}" data-updated="${updatedAt}">
@@ -418,8 +465,8 @@ function buildMineCard(pr, owner, repo, approvals, uniqueReviewers, blocking, up
       </div>
     </div>
     <div class="pr-meta">
-      <span class="badge badge-review">&#128100; ${uniqueReviewers} reviewer${uniqueReviewers!==1?'s':''}</span>
-      <span class="badge badge-app">&#10003; ${approvals} approval${approvals!==1?'s':''}</span>
+      <span class="badge badge-review">👤 ${uniqueReviewers} reviewer${uniqueReviewers!==1?'s':''}</span>
+      <span class="badge badge-app">✓ ${approvals} approval${approvals!==1?'s':''}</span>
     </div>
     <hr class="divider"/>
     <div class="section-label">Branch protection</div>
@@ -430,36 +477,54 @@ function buildMineCard(pr, owner, repo, approvals, uniqueReviewers, blocking, up
 /* ── load invited ────────────────────────────────────────────── */
 async function loadInvited() {
   $('invited').innerHTML = '<div class="state-msg"><span class="spinner"></span>Fetching review requests…</div>';
-  const items = await searchPRs('is:pr is:open review-requested:' + ME);
+  const items = await searchPRs('is:pr is:open review-requested:' + state.me);
   $('cntInvited').textContent = items.length;
   if (!items.length) { $('invited').innerHTML = '<div class="state-msg">No review requests found.</div>'; return; }
 
   const rows = await Promise.all(items.map(async pr => {
     const [owner, repo] = repoFromUrl(pr.repository_url);
     const [detail, reviews] = await Promise.all([getPRDetail(owner, repo, pr.number), getReviews(owner, repo, pr.number)]);
+
     const approvals = reviews.filter(r => r.state === 'APPROVED').length;
     const uniqueReviewers = new Set(reviews.filter(r => r.state !== 'DISMISSED').map(r => r.user?.login)).size;
-    let checksHtml = '<span class="badge badge-neutral">No checks</span>';
+    const myStatus = myReviewStatus(reviews, state.me);
+
+    // CI: workflow runs
+    let ciHtml = '<span class="badge badge-neutral">No workflows found</span>';
     if (detail?.head?.sha) {
-      const checks = await getChecks(owner, repo, detail.head.sha);
-      if (checks.length) checksHtml = checks.map(checkBadge).join('');
+      const runs = await getWorkflowRuns(owner, repo, detail.head.sha);
+      if (runs.length) {
+        // Dedupliceer: per workflow naam alleen de meest recente run tonen
+        const latest = {};
+        runs.forEach(run => {
+          const key = run.name || run.id;
+          if (!latest[key] || new Date(run.created_at) > new Date(latest[key].created_at)) {
+            latest[key] = run;
+          }
+        });
+        ciHtml = Object.values(latest).map(workflowBadge).join('');
+      }
     }
+
     const repoFull = owner + '/' + repo;
     const author = pr.user?.login || '?';
     const updatedAt = pr.updated_at || pr.created_at;
-    return { num: String(pr.number), repoFull, searchText: (pr.title + ' ' + repoFull + ' ' + author).toLowerCase(),
+    return {
+      num: String(pr.number), repoFull,
+      searchText: (pr.title + ' ' + repoFull + ' ' + author).toLowerCase(),
       createdAt: pr.created_at, updatedAt,
-      html: buildInvitedCard(pr, owner, repo, author, approvals, uniqueReviewers, checksHtml, updatedAt) };
+      html: buildInvitedCard(pr, owner, repo, author, approvals, uniqueReviewers, myStatus, ciHtml, updatedAt)
+    };
   }));
 
   prData.invited = rows;
-  const listHtml = '<div class="pr-list" style="display:flex;flex-direction:column;gap:10px">' + rows.map(r => r.html).join('') + '</div>';
-  $('invited').innerHTML = listHtml;
+  $('invited').innerHTML = '<div class="pr-list" style="display:flex;flex-direction:column;gap:10px">' + rows.map(r => r.html).join('') + '</div>';
   populateRepoFilter('invited');
+  $('filterInvited').style.display = 'flex';
   applyFilters('invited');
 }
 
-function buildInvitedCard(pr, owner, repo, author, approvals, uniqueReviewers, checksHtml, updatedAt) {
+function buildInvitedCard(pr, owner, repo, author, approvals, uniqueReviewers, myStatus, ciHtml, updatedAt) {
   const ageOld = isOld(pr.created_at) ? ' old' : '';
   const actOld = isOld(updatedAt) ? ' old' : '';
   return `<div class="pr-card" data-num="${pr.number}" data-created="${pr.created_at}" data-updated="${updatedAt}">
@@ -479,25 +544,26 @@ function buildInvitedCard(pr, owner, repo, author, approvals, uniqueReviewers, c
       </div>
     </div>
     <div class="pr-meta">
-      <span class="badge badge-review">&#128100; ${uniqueReviewers} reviewer${uniqueReviewers!==1?'s':''}</span>
-      <span class="badge badge-app">&#10003; ${approvals} approval${approvals!==1?'s':''}</span>
+      <span class="badge badge-review">👤 ${uniqueReviewers} reviewer${uniqueReviewers!==1?'s':''}</span>
+      <span class="badge badge-app">✓ ${approvals} approval${approvals!==1?'s':''}</span>
+      ${myReviewBadge(myStatus)}
     </div>
     <hr class="divider"/>
-    <div class="section-label">CI checks</div>
-    <div class="check-list">${checksHtml}</div>
+    <div class="section-label">CI / GitHub Actions</div>
+    <div class="check-list">${ciHtml}</div>
   </div>`;
 }
 
 /* ── main load ───────────────────────────────────────────────── */
 async function load() {
-  TOKEN = $('tkn').value.trim();
+  state.token = $('tkn').value.trim();
   $('errorBox').innerHTML = '';
-  if (!TOKEN) { showError('Please enter a GitHub Personal Access Token.'); return; }
+  if (!state.token) { showError('Please enter a GitHub Personal Access Token.'); return; }
   $('loadBtn').disabled = true; $('loadBtn').textContent = 'Loading…';
   prData = { mine: [], invited: [] };
   try {
     const me = await gh('/user');
-    ME = me.login;
+    state.me = me.login;
     await Promise.all([loadMine(), loadInvited()]);
   } catch(e) {
     showError(e.message);
@@ -507,33 +573,16 @@ async function load() {
     $('loadBtn').disabled = false; $('loadBtn').textContent = 'Load';
   }
 }
+
 function showError(msg) {
-  $('errorBox').innerHTML = `<div class="state-msg error" style="margin-bottom:16px">&#9888; ${esc(msg)}</div>`;
+  $('errorBox').innerHTML = `<div class="state-msg error" style="margin-bottom:16px">⚠ ${esc(msg)}</div>`;
 }
 
 $('tkn').addEventListener('keydown', e => { if (e.key === 'Enter') load(); });
-
 $('tokenType').addEventListener('change', () => {
-  const fine = $('tokenType').value === 'fine';
-  $('tkn').placeholder = fine ? 'github_pat_...' : 'ghp_...';
+  $('tkn').placeholder = $('tokenType').value === 'fine' ? 'github_pat_...' : 'ghp_...';
 });
 
-function buildAuthHeader() {
-  // Both classic (ghp_) and fine-grained (github_pat_) tokens use Bearer auth.
-  // Classic tokens also work with "token" but Bearer is preferred and works for both.
-  return 'Bearer ' + TOKEN;
-}
-
-// Patch gh() to use the correct auth header
-async function gh(path) {
-  const r = await fetch('https://api.github.com' + path, {
-    headers: { Authorization: buildAuthHeader(), Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' }
-  });
-  if (!r.ok) throw new Error('GitHub API error: ' + r.status + ' ' + r.statusText);
-  return r.json();
-}
-
-// refresh repo label colours on theme toggle
 const observer = new MutationObserver(() => refreshRepoColors());
 observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 </script>
