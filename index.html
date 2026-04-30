@@ -111,6 +111,17 @@
 
     footer { text-align: center; color: var(--text-hint); font-size: 12px; padding: 28px 0 16px; }
     .no-results { text-align: center; color: var(--text-hint); font-size: 13px; padding: 30px; display: none; }
+
+    .stats-dropdown { position: relative; }
+    .stats-dropdown summary { list-style: none; padding: 7px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; color: var(--text-muted); font-size: 13px; cursor: pointer; user-select: none; white-space: nowrap; }
+    .stats-dropdown summary::-webkit-details-marker { display: none; }
+    .stats-dropdown summary::after { content: ' ▾'; font-size: 11px; }
+    .stats-dropdown[open] summary::after { content: ' ▴'; }
+    .stats-dropdown[open] summary { border-color: var(--accent); color: var(--text); }
+    .stats-box { position: absolute; right: 0; top: calc(100% + 6px); z-index: 10; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; min-width: 220px; box-shadow: 0 8px 24px rgba(0,0,0,.12); display: flex; flex-direction: column; gap: 8px; }
+    .stat-row { display: flex; justify-content: space-between; gap: 24px; font-size: 13px; }
+    .stat-label { color: var(--text-muted); }
+    .stat-value { font-weight: 600; color: var(--text); white-space: nowrap; }
   </style>
 </head>
 <body>
@@ -126,11 +137,7 @@
 <div class="container">
   <div class="token-bar">
     <label for="tkn">Token</label>
-    <select id="tokenType" style="width:auto;flex-shrink:0">
-      <option value="classic">Classic (ghp_)</option>
-      <option value="fine">Fine-grained (github_pat_)</option>
-    </select>
-    <input type="password" id="tkn" placeholder="ghp_..." autocomplete="off" />
+    <input type="password" id="tkn" placeholder="ghp_ or github_pat_..." autocomplete="off" />
     <button id="loadBtn" onclick="load()">Load</button>
   </div>
   <div id="errorBox"></div>
@@ -149,6 +156,7 @@
       <option value="activity">Last activity</option>
     </select>
     <span class="filter-count" id="fcMine"></span>
+    <details class="stats-dropdown" id="statsMine"><summary>Stats</summary><div class="stats-box" id="statsBoxMine"></div></details>
   </div>
   <div class="filter-bar" id="filterInvited" style="display:none">
     <input type="search" id="searchInvited" placeholder="Search title, repo, author…" oninput="applyFilters('invited')" />
@@ -158,7 +166,13 @@
       <option value="oldest">Oldest first</option>
       <option value="activity">Last activity</option>
     </select>
+    <select id="reviewedInvited" onchange="applyFilters('invited')">
+      <option value="all">All PRs</option>
+      <option value="pending">Not reviewed yet</option>
+      <option value="reviewed">Already reviewed</option>
+    </select>
     <span class="filter-count" id="fcInvited"></span>
+    <details class="stats-dropdown" id="statsInvited"><summary>Stats</summary><div class="stats-box" id="statsBoxInvited"></div></details>
   </div>
 
   <div id="mine"><div class="state-msg">Enter your token and click <strong>Load</strong>.</div></div>
@@ -355,19 +369,24 @@ function populateRepoFilter(tab) {
 }
 
 function applyFilters(tab) {
-  const searchEl = $(tab === 'mine' ? 'searchMine' : 'searchInvited');
-  const repoEl   = $(tab === 'mine' ? 'repoMine'   : 'repoInvited');
-  const sortEl   = $(tab === 'mine' ? 'sortMine'   : 'sortInvited');
-  const fcEl     = $(tab === 'mine' ? 'fcMine'     : 'fcInvited');
+  const searchEl   = $(tab === 'mine' ? 'searchMine'      : 'searchInvited');
+  const repoEl     = $(tab === 'mine' ? 'repoMine'        : 'repoInvited');
+  const sortEl     = $(tab === 'mine' ? 'sortMine'        : 'sortInvited');
+  const fcEl       = $(tab === 'mine' ? 'fcMine'          : 'fcInvited');
+  const statsBoxEl = $(tab === 'mine' ? 'statsBoxMine'    : 'statsBoxInvited');
+  const reviewedEl = tab === 'invited' ? $('reviewedInvited') : null;
 
-  const q    = searchEl.value.toLowerCase();
-  const repo = repoEl.value;
-  const sort = sortEl.value;
+  const q        = searchEl.value.toLowerCase();
+  const repo     = repoEl.value;
+  const sort     = sortEl.value;
+  const reviewed = reviewedEl?.value || 'all';
 
   let items = prData[tab].slice();
   items = items.filter(d => {
     if (repo && d.repoFull !== repo) return false;
     if (q && !d.searchText.includes(q)) return false;
+    if (reviewed === 'pending'  && d.myReviewed) return false;
+    if (reviewed === 'reviewed' && !d.myReviewed) return false;
     return true;
   });
   if (sort === 'newest')   items.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -388,14 +407,30 @@ function applyFilters(tab) {
 
   let noRes = list.parentElement.querySelector('.no-results');
   if (!noRes) {
-    noRes = document.createElement('div');
-    noRes.className = 'no-results';
-    list.parentElement.appendChild(noRes);
-    noRes.textContent = 'No results match your filters.';
+    noRes = document.createElement('div'); noRes.className = 'no-results';
+    list.parentElement.appendChild(noRes); noRes.textContent = 'No results match your filters.';
   }
   noRes.style.display = visibleNums.size === 0 ? 'block' : 'none';
   fcEl.textContent = `${visibleNums.size} of ${prData[tab].length}`;
+  renderStats(items, statsBoxEl);
   refreshRepoColors();
+}
+
+function renderStats(items, el) {
+  if (!el) return;
+  if (!items.length) { el.innerHTML = '<div class="stat-row"><span class="stat-label">No PRs visible</span></div>'; return; }
+  const now = Date.now();
+  const ages = items.map(d => (now - new Date(d.createdAt)) / 86400000);
+  const activities = items.map(d => (now - new Date(d.updatedAt)) / 86400000);
+  const oldest = Math.max(...ages);
+  const avgAge = ages.reduce((a,b) => a+b, 0) / ages.length;
+  const stalest = Math.max(...activities);
+  const fmtDays = d => d < 1 ? 'today' : d < 7 ? Math.round(d) + 'd' : Math.round(d/7) + 'w ' + Math.round(d%7) + 'd';
+  el.innerHTML = `
+    <div class="stat-row"><span class="stat-label">Visible PRs</span><span class="stat-value">${items.length}</span></div>
+    <div class="stat-row"><span class="stat-label">Oldest open</span><span class="stat-value">${fmtDays(oldest)}</span></div>
+    <div class="stat-row"><span class="stat-label">Avg age</span><span class="stat-value">${fmtDays(avgAge)}</span></div>
+    <div class="stat-row"><span class="stat-label">Longest without activity</span><span class="stat-value">${fmtDays(stalest)}</span></div>`;
 }
 
 /* ── tab switch ─────────────────────────────────────────────── */
@@ -429,7 +464,7 @@ async function loadMine() {
     const repoFull = owner + '/' + repo;
     const updatedAt = pr.updated_at || pr.created_at;
     return {
-      num: String(pr.number), repoFull,
+      num: String(pr.number), repoFull, myReviewed: myStatus !== null,
       searchText: (pr.title + ' ' + repoFull).toLowerCase(),
       createdAt: pr.created_at, updatedAt,
       html: buildMineCard(pr, owner, repo, approvals, uniqueReviewers, blocking, updatedAt)
@@ -589,9 +624,7 @@ function showError(msg) {
 }
 
 $('tkn').addEventListener('keydown', e => { if (e.key === 'Enter') load(); });
-$('tokenType').addEventListener('change', () => {
-  $('tkn').placeholder = $('tokenType').value === 'fine' ? 'github_pat_...' : 'ghp_...';
-});
+
 
 const observer = new MutationObserver(() => refreshRepoColors());
 observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
