@@ -39,7 +39,7 @@
     header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 10px; }
     header svg { flex-shrink: 0; }
     header .title { font-size: 15px; font-weight: 600; flex: 1; }
-    .theme-btn { background: none; border: 1px solid var(--border); border-radius: 6px; color: var(--text-muted); cursor: pointer; padding: 5px 10px; font-size: 13px; display: flex; align-items: center; gap: 5px; }
+    .theme-btn { background: none; border: 1px solid var(--border); border-radius: 6px; color: var(--text-muted); cursor: pointer; padding: 5px 10px; font-size: 13px; }
     .theme-btn:hover { background: var(--surface2); color: var(--text); }
 
     .container { max-width: 960px; margin: 0 auto; padding: 24px 20px; }
@@ -63,8 +63,18 @@
     .filter-bar input[type=search] { flex: 1; min-width: 180px; padding: 7px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 13px; outline: none; }
     .filter-bar input[type=search]:focus { border-color: var(--accent); }
     .filter-bar select { padding: 7px 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 13px; outline: none; cursor: pointer; }
-    .filter-bar select:focus { border-color: var(--accent); }
     .filter-count { font-size: 12px; color: var(--text-hint); white-space: nowrap; margin-left: auto; }
+
+    .stats-dropdown { position: relative; }
+    .stats-dropdown summary { list-style: none; padding: 7px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; color: var(--text-muted); font-size: 13px; cursor: pointer; user-select: none; white-space: nowrap; }
+    .stats-dropdown summary::-webkit-details-marker { display: none; }
+    .stats-dropdown summary::after { content: ' ▾'; font-size: 11px; }
+    .stats-dropdown[open] summary::after { content: ' ▴'; }
+    .stats-dropdown[open] summary { border-color: var(--accent); color: var(--text); }
+    .stats-box { position: absolute; right: 0; top: calc(100% + 6px); z-index: 10; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; min-width: 220px; box-shadow: 0 8px 24px rgba(0,0,0,.12); display: flex; flex-direction: column; gap: 8px; }
+    .stat-row { display: flex; justify-content: space-between; gap: 24px; font-size: 13px; }
+    .stat-label { color: var(--text-muted); }
+    .stat-value { font-weight: 600; color: var(--text); white-space: nowrap; }
 
     .pr-list { display: flex; flex-direction: column; gap: 10px; }
     .pr-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; transition: border-color .15s; }
@@ -87,14 +97,14 @@
     .pr-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
 
     .badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 20px; font-size: 12px; font-weight: 500; border: 1px solid transparent; }
-    .badge-block    { background: var(--badge-block-bg); color: var(--badge-block-txt); border-color: var(--badge-block-bdr); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 340px; }
-    .badge-ok       { background: var(--badge-ok-bg);    color: var(--badge-ok-txt);    border-color: var(--badge-ok-bdr); }
-    .badge-review   { background: var(--badge-rev-bg);   color: var(--badge-rev-txt);   border-color: var(--badge-rev-bdr); }
-    .badge-app      { background: var(--badge-app-bg);   color: var(--badge-app-txt);   border-color: var(--badge-app-bdr); }
-    .badge-warn     { background: var(--badge-warn-bg);  color: var(--badge-warn-txt);  border-color: var(--badge-warn-bdr); }
-    .badge-neutral  { background: var(--surface2); color: var(--text-muted); border-color: var(--border); }
-    .badge-cr       { background: var(--badge-cr-bg);    color: var(--badge-cr-txt);    border-color: var(--badge-cr-bdr); }
-    .badge-pending  { background: var(--badge-pending-bg); color: var(--badge-pending-txt); border-color: var(--badge-pending-bdr); }
+    .badge-block   { background: var(--badge-block-bg); color: var(--badge-block-txt); border-color: var(--badge-block-bdr); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 340px; }
+    .badge-ok      { background: var(--badge-ok-bg);    color: var(--badge-ok-txt);    border-color: var(--badge-ok-bdr); }
+    .badge-review  { background: var(--badge-rev-bg);   color: var(--badge-rev-txt);   border-color: var(--badge-rev-bdr); }
+    .badge-app     { background: var(--badge-app-bg);   color: var(--badge-app-txt);   border-color: var(--badge-app-bdr); }
+    .badge-warn    { background: var(--badge-warn-bg);  color: var(--badge-warn-txt);  border-color: var(--badge-warn-bdr); }
+    .badge-neutral { background: var(--surface2); color: var(--text-muted); border-color: var(--border); }
+    .badge-cr      { background: var(--badge-cr-bg);    color: var(--badge-cr-txt);    border-color: var(--badge-cr-bdr); }
+    .badge-pending { background: var(--badge-pending-bg); color: var(--badge-pending-txt); border-color: var(--badge-pending-bdr); }
 
     .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
     .dot-ok { background: #2da44e; } .dot-fail { background: #cf222e; } .dot-pending { background: #bf8700; } .dot-skip { background: #8c959f; }
@@ -111,17 +121,6 @@
 
     footer { text-align: center; color: var(--text-hint); font-size: 12px; padding: 28px 0 16px; }
     .no-results { text-align: center; color: var(--text-hint); font-size: 13px; padding: 30px; display: none; }
-
-    .stats-dropdown { position: relative; }
-    .stats-dropdown summary { list-style: none; padding: 7px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; color: var(--text-muted); font-size: 13px; cursor: pointer; user-select: none; white-space: nowrap; }
-    .stats-dropdown summary::-webkit-details-marker { display: none; }
-    .stats-dropdown summary::after { content: ' ▾'; font-size: 11px; }
-    .stats-dropdown[open] summary::after { content: ' ▴'; }
-    .stats-dropdown[open] summary { border-color: var(--accent); color: var(--text); }
-    .stats-box { position: absolute; right: 0; top: calc(100% + 6px); z-index: 10; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; min-width: 220px; box-shadow: 0 8px 24px rgba(0,0,0,.12); display: flex; flex-direction: column; gap: 8px; }
-    .stat-row { display: flex; justify-content: space-between; gap: 24px; font-size: 13px; }
-    .stat-label { color: var(--text-muted); }
-    .stat-value { font-weight: 600; color: var(--text); white-space: nowrap; }
   </style>
 </head>
 <body>
@@ -158,6 +157,7 @@
     <span class="filter-count" id="fcMine"></span>
     <details class="stats-dropdown" id="statsMine"><summary>Stats</summary><div class="stats-box" id="statsBoxMine"></div></details>
   </div>
+
   <div class="filter-bar" id="filterInvited" style="display:none">
     <input type="search" id="searchInvited" placeholder="Search title, repo, author…" oninput="applyFilters('invited')" />
     <select id="repoInvited" onchange="applyFilters('invited')"><option value="">All repos</option></select>
@@ -182,7 +182,7 @@
 <footer>All data is fetched directly from the GitHub API — your token is never stored or sent anywhere else.</footer>
 
 <script>
-/* ── FIX 1: token + username in een closure, niet globaal ───── */
+/* ── state in closure — niet globaal bereikbaar ─────────────── */
 const state = (() => {
   let _token = '', _me = '';
   return {
@@ -247,9 +247,7 @@ const repoColorMap = {};
 let repoColorIdx = 0;
 function getRepoStyle(repoFull) {
   if (repoColorMap[repoFull] === undefined) repoColorMap[repoFull] = repoColorIdx++ % 10;
-  const idx = repoColorMap[repoFull];
-  const dark = html.dataset.theme === 'dark';
-  const [bg, txt, bdr] = dark ? DARK_REPO_PALETTES[idx] : REPO_PALETTES[idx];
+  const [bg, txt, bdr] = (html.dataset.theme === 'dark' ? DARK_REPO_PALETTES : REPO_PALETTES)[repoColorMap[repoFull]];
   return `background:${bg};color:${txt};border-color:${bdr};`;
 }
 function repoLabelHtml(owner, repo) {
@@ -260,7 +258,7 @@ function refreshRepoColors() {
   document.querySelectorAll('[data-repo]').forEach(el => { el.style.cssText = getRepoStyle(el.dataset.repo); });
 }
 
-/* ── FIX 2: één gh() definitie, gebruikt state.token ────────── */
+/* ── GitHub API — één definitie ─────────────────────────────── */
 async function gh(path) {
   const r = await fetch('https://api.github.com' + path, {
     headers: {
@@ -269,7 +267,7 @@ async function gh(path) {
       'X-GitHub-Api-Version': '2022-11-28'
     }
   });
-  if (!r.ok) throw new Error('GitHub API error: ' + r.status + ' ' + r.statusText);
+  if (!r.ok) throw Object.assign(new Error(r.statusText), { status: r.status });
   return r.json();
 }
 
@@ -278,42 +276,42 @@ async function searchPRs(q) {
   return d.items || [];
 }
 async function getReviews(o, r, n) {
-  try { return await gh('/repos/'+o+'/'+r+'/pulls/'+n+'/reviews'); } catch { return []; }
+  try { return await gh(`/repos/${o}/${r}/pulls/${n}/reviews`); } catch { return []; }
 }
 async function getPRDetail(o, r, n) {
-  try { return await gh('/repos/'+o+'/'+r+'/pulls/'+n); } catch { return null; }
+  try { return await gh(`/repos/${o}/${r}/pulls/${n}`); } catch { return null; }
 }
 async function getProtection(o, r, branch) {
-  try { return await gh('/repos/'+o+'/'+r+'/branches/'+encodeURIComponent(branch)+'/protection'); } catch { return null; }
+  // Gebruik een stille fetch: 404 is normaal als er geen protection is of geen rechten
+  try {
+    const res = await fetch(`https://api.github.com/repos/${o}/${r}/branches/${encodeURIComponent(branch)}/protection`, {
+      headers: { Authorization: 'Bearer ' + state.token, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' }
+    });
+    if (!res.ok) return null; // 404 / 403 — geen protection of geen rechten, geen consolefout
+    return res.json();
+  } catch { return null; }
 }
-
-/* ── FIX 3: GitHub Actions workflow runs i.p.v. Checks API ──── */
 async function getWorkflowRuns(o, r, sha) {
   try {
-    // Haal de laatste runs op voor deze repo en filter daarna op head_sha
-    const d = await gh('/repos/'+o+'/'+r+'/actions/runs?per_page=50&head_sha='+sha);
+    const d = await gh(`/repos/${o}/${r}/actions/runs?per_page=50&head_sha=${sha}`);
     return d.workflow_runs || [];
   } catch { return []; }
 }
 
+function repoFromUrl(url) {
+  return url.replace('https://api.github.com/repos/', '').split('/').slice(0, 2);
+}
+
+/* ── badges ─────────────────────────────────────────────────── */
 function workflowBadge(run) {
   const name = esc(run.name || run.display_title || 'Workflow');
-  const status = run.status;      // queued | in_progress | completed
-  const conclusion = run.conclusion; // success | failure | cancelled | skipped | null
-
-  if (status !== 'completed') {
+  if (run.status !== 'completed')
     return `<span class="badge badge-warn"><span class="dot dot-pending"></span>${name} (running)</span>`;
-  }
-  if (conclusion === 'success') {
+  if (run.conclusion === 'success')
     return `<span class="badge badge-ok"><span class="dot dot-ok"></span>${name}</span>`;
-  }
-  if (conclusion === 'failure' || conclusion === 'timed_out') {
+  if (run.conclusion === 'failure' || run.conclusion === 'timed_out')
     return `<span class="badge badge-block"><span class="dot dot-fail"></span>${name}</span>`;
-  }
-  if (conclusion === 'skipped' || conclusion === 'neutral' || conclusion === 'cancelled') {
-    return `<span class="badge badge-neutral"><span class="dot dot-skip"></span>${name}</span>`;
-  }
-  return `<span class="badge badge-warn"><span class="dot dot-pending"></span>${name}</span>`;
+  return `<span class="badge badge-neutral"><span class="dot dot-skip"></span>${name}</span>`;
 }
 
 function blockingRules(prot, approvals) {
@@ -329,118 +327,98 @@ function blockingRules(prot, approvals) {
   if (prot.required_status_checks?.strict) rules.push('Branch must be up-to-date with base');
   return rules;
 }
-function repoFromUrl(url) {
-  return url.replace('https://api.github.com/repos/', '').split('/').slice(0,2);
+
+function protectionHtml(blocking) {
+  return blocking.length
+    ? blocking.map(b => `<span class="badge badge-block" title="${esc(b)}">⚠ ${esc(b)}</span>`).join('')
+    : '<span class="badge badge-ok">✓ No blockers found</span>';
 }
 
-/* ── FIX 4: eigen reviewstatus bepalen ─────────────────────── */
+/* ── eigen reviewstatus ─────────────────────────────────────── */
 function myReviewStatus(reviews, me) {
-  // Meest recente niet-gedismissed review van mezelf
   const mine = reviews
     .filter(r => r.user?.login === me && r.state !== 'DISMISSED')
     .sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at));
-
-  if (!mine.length) return null;
-  return mine[0].state; // APPROVED | CHANGES_REQUESTED | COMMENTED
+  return mine.length ? mine[0].state : null;
 }
 
 function myReviewBadge(status) {
-  if (status === null) {
-    return `<span class="badge badge-pending">⏳ Not reviewed yet</span>`;
-  }
-  if (status === 'APPROVED') {
-    return `<span class="badge badge-ok">✓ You approved</span>`;
-  }
-  if (status === 'CHANGES_REQUESTED') {
-    return `<span class="badge badge-cr">✗ You requested changes</span>`;
-  }
-  if (status === 'COMMENTED') {
-    return `<span class="badge badge-review">💬 You commented</span>`;
-  }
-  return '';
+  if (status === 'APPROVED')           return `<span class="badge badge-ok">✓ You approved</span>`;
+  if (status === 'CHANGES_REQUESTED')  return `<span class="badge badge-cr">✗ You requested changes</span>`;
+  if (status === 'COMMENTED')          return `<span class="badge badge-review">💬 You commented</span>`;
+  return `<span class="badge badge-pending">⏳ Not reviewed yet</span>`;
+}
+
+/* ── stats ──────────────────────────────────────────────────── */
+function renderStats(items, el) {
+  if (!el) return;
+  if (!items.length) { el.innerHTML = '<div class="stat-row"><span class="stat-label">No PRs visible</span></div>'; return; }
+  const now = Date.now();
+  const ages = items.map(d => (now - new Date(d.createdAt)) / 86400000);
+  const acts  = items.map(d => (now - new Date(d.updatedAt)) / 86400000);
+  const fmt = d => d < 1 ? 'today' : d < 7 ? Math.round(d) + 'd' : Math.round(d/7) + 'w ' + Math.round(d%7) + 'd';
+  el.innerHTML = `
+    <div class="stat-row"><span class="stat-label">Visible PRs</span><span class="stat-value">${items.length}</span></div>
+    <div class="stat-row"><span class="stat-label">Oldest open</span><span class="stat-value">${fmt(Math.max(...ages))}</span></div>
+    <div class="stat-row"><span class="stat-label">Avg age</span><span class="stat-value">${fmt(ages.reduce((a,b)=>a+b,0)/ages.length)}</span></div>
+    <div class="stat-row"><span class="stat-label">Longest without activity</span><span class="stat-value">${fmt(Math.max(...acts))}</span></div>`;
 }
 
 /* ── filters ─────────────────────────────────────────────────── */
 function populateRepoFilter(tab) {
   const sel = $(tab === 'mine' ? 'repoMine' : 'repoInvited');
   const repos = [...new Set(prData[tab].map(d => d.repoFull))].sort();
-  sel.innerHTML = '<option value="">All repos</option>' +
-    repos.map(r => `<option value="${esc(r)}">${esc(r)}</option>`).join('');
+  sel.innerHTML = '<option value="">All repos</option>' + repos.map(r => `<option value="${esc(r)}">${esc(r)}</option>`).join('');
 }
 
 function applyFilters(tab) {
-  const searchEl   = $(tab === 'mine' ? 'searchMine'      : 'searchInvited');
-  const repoEl     = $(tab === 'mine' ? 'repoMine'        : 'repoInvited');
-  const sortEl     = $(tab === 'mine' ? 'sortMine'        : 'sortInvited');
-  const fcEl       = $(tab === 'mine' ? 'fcMine'          : 'fcInvited');
-  const statsBoxEl = $(tab === 'mine' ? 'statsBoxMine'    : 'statsBoxInvited');
-  const reviewedEl = tab === 'invited' ? $('reviewedInvited') : null;
+  const isMine   = tab === 'mine';
+  const searchEl = $(isMine ? 'searchMine'   : 'searchInvited');
+  const repoEl   = $(isMine ? 'repoMine'     : 'repoInvited');
+  const sortEl   = $(isMine ? 'sortMine'     : 'sortInvited');
+  const fcEl     = $(isMine ? 'fcMine'       : 'fcInvited');
+  const statsEl  = $(isMine ? 'statsBoxMine' : 'statsBoxInvited');
 
   const q        = searchEl.value.toLowerCase();
   const repo     = repoEl.value;
   const sort     = sortEl.value;
-  const reviewed = reviewedEl?.value || 'all';
+  const reviewed = isMine ? 'all' : ($('reviewedInvited')?.value || 'all');
 
-  let items = prData[tab].slice();
-  items = items.filter(d => {
+  let items = prData[tab].slice().filter(d => {
     if (repo && d.repoFull !== repo) return false;
     if (q && !d.searchText.includes(q)) return false;
-    if (reviewed === 'pending'  && d.myReviewed) return false;
+    if (reviewed === 'pending'  &&  d.myReviewed) return false;
     if (reviewed === 'reviewed' && !d.myReviewed) return false;
     return true;
   });
+
   if (sort === 'newest')   items.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
   if (sort === 'oldest')   items.sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt));
   if (sort === 'activity') items.sort((a,b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
   const list = document.getElementById(tab).querySelector('.pr-list');
   if (!list) return;
-  const cards = list.querySelectorAll('.pr-card');
   const cardMap = {};
-  cards.forEach(c => { cardMap[c.dataset.num] = c; c.classList.add('hidden'); });
+  list.querySelectorAll('.pr-card').forEach(c => { cardMap[c.dataset.num] = c; c.classList.add('hidden'); });
 
-  const visibleNums = new Set(items.map(d => d.num));
-  items.forEach((d, i) => {
-    const c = cardMap[d.num];
-    if (c) { c.classList.remove('hidden'); c.style.order = i; }
-  });
+  const visNums = new Set(items.map(d => d.num));
+  items.forEach((d, i) => { const c = cardMap[d.num]; if (c) { c.classList.remove('hidden'); c.style.order = i; } });
 
   let noRes = list.parentElement.querySelector('.no-results');
-  if (!noRes) {
-    noRes = document.createElement('div'); noRes.className = 'no-results';
-    list.parentElement.appendChild(noRes); noRes.textContent = 'No results match your filters.';
-  }
-  noRes.style.display = visibleNums.size === 0 ? 'block' : 'none';
-  fcEl.textContent = `${visibleNums.size} of ${prData[tab].length}`;
-  renderStats(items, statsBoxEl);
-  refreshRepoColors();
-}
+  if (!noRes) { noRes = document.createElement('div'); noRes.className = 'no-results'; list.parentElement.appendChild(noRes); noRes.textContent = 'No results match your filters.'; }
+  noRes.style.display = visNums.size === 0 ? 'block' : 'none';
 
-function renderStats(items, el) {
-  if (!el) return;
-  if (!items.length) { el.innerHTML = '<div class="stat-row"><span class="stat-label">No PRs visible</span></div>'; return; }
-  const now = Date.now();
-  const ages = items.map(d => (now - new Date(d.createdAt)) / 86400000);
-  const activities = items.map(d => (now - new Date(d.updatedAt)) / 86400000);
-  const oldest = Math.max(...ages);
-  const avgAge = ages.reduce((a,b) => a+b, 0) / ages.length;
-  const stalest = Math.max(...activities);
-  const fmtDays = d => d < 1 ? 'today' : d < 7 ? Math.round(d) + 'd' : Math.round(d/7) + 'w ' + Math.round(d%7) + 'd';
-  el.innerHTML = `
-    <div class="stat-row"><span class="stat-label">Visible PRs</span><span class="stat-value">${items.length}</span></div>
-    <div class="stat-row"><span class="stat-label">Oldest open</span><span class="stat-value">${fmtDays(oldest)}</span></div>
-    <div class="stat-row"><span class="stat-label">Avg age</span><span class="stat-value">${fmtDays(avgAge)}</span></div>
-    <div class="stat-row"><span class="stat-label">Longest without activity</span><span class="stat-value">${fmtDays(stalest)}</span></div>`;
+  fcEl.textContent = `${visNums.size} of ${prData[tab].length}`;
+  renderStats(items, statsEl);
+  refreshRepoColors();
 }
 
 /* ── tab switch ─────────────────────────────────────────────── */
 function switchTab(id) {
   ['mine','invited'].forEach(t => {
     $(t).style.display = t === id ? '' : 'none';
-    const key = 'tab' + t.charAt(0).toUpperCase() + t.slice(1);
-    $(key).classList.toggle('active', t === id);
-    $('filter' + t.charAt(0).toUpperCase() + t.slice(1)).style.display =
-      (t === id && prData[t].length > 0) ? 'flex' : 'none';
+    $('tab' + t[0].toUpperCase() + t.slice(1)).classList.toggle('active', t === id);
+    $('filter' + t[0].toUpperCase() + t.slice(1)).style.display = (t === id && prData[t].length > 0) ? 'flex' : 'none';
   });
 }
 
@@ -456,15 +434,12 @@ async function loadMine() {
     const [detail, reviews] = await Promise.all([getPRDetail(owner, repo, pr.number), getReviews(owner, repo, pr.number)]);
     const approvals = reviews.filter(r => r.state === 'APPROVED').length;
     const uniqueReviewers = new Set(reviews.filter(r => r.state !== 'DISMISSED').map(r => r.user?.login)).size;
-    let blocking = [];
-    if (detail?.base?.ref) {
-      const prot = await getProtection(owner, repo, detail.base.ref);
-      blocking = blockingRules(prot, approvals);
-    }
+    const prot = detail?.base?.ref ? await getProtection(owner, repo, detail.base.ref) : null;
+    const blocking = blockingRules(prot, approvals);
     const repoFull = owner + '/' + repo;
     const updatedAt = pr.updated_at || pr.created_at;
     return {
-      num: String(pr.number), repoFull, myReviewed: myStatus !== null,
+      num: String(pr.number), repoFull, myReviewed: false,
       searchText: (pr.title + ' ' + repoFull).toLowerCase(),
       createdAt: pr.created_at, updatedAt,
       html: buildMineCard(pr, owner, repo, approvals, uniqueReviewers, blocking, updatedAt)
@@ -479,9 +454,6 @@ async function loadMine() {
 }
 
 function buildMineCard(pr, owner, repo, approvals, uniqueReviewers, blocking, updatedAt) {
-  const blockHtml = blocking.length
-    ? blocking.map(b => `<span class="badge badge-block" title="${esc(b)}">⚠ ${esc(b)}</span>`).join('')
-    : '<span class="badge badge-ok">✓ No blockers found</span>';
   const ageOld = isOld(pr.created_at) ? ' old' : '';
   const actOld = isOld(updatedAt) ? ' old' : '';
   return `<div class="pr-card" data-num="${pr.number}" data-created="${pr.created_at}" data-updated="${updatedAt}">
@@ -505,7 +477,7 @@ function buildMineCard(pr, owner, repo, approvals, uniqueReviewers, blocking, up
     </div>
     <hr class="divider"/>
     <div class="section-label">Branch protection</div>
-    <div class="check-list">${blockHtml}</div>
+    <div class="check-list">${protectionHtml(blocking)}</div>
   </div>`;
 }
 
@@ -520,9 +492,15 @@ async function loadInvited() {
     const [owner, repo] = repoFromUrl(pr.repository_url);
     const [detail, reviews] = await Promise.all([getPRDetail(owner, repo, pr.number), getReviews(owner, repo, pr.number)]);
 
-    const approvals = reviews.filter(r => r.state === 'APPROVED').length;
+    // Alles afgeleid van reviews — myStatus vóór alles wat het gebruikt
+    const approvals       = reviews.filter(r => r.state === 'APPROVED').length;
     const uniqueReviewers = new Set(reviews.filter(r => r.state !== 'DISMISSED').map(r => r.user?.login)).size;
-    const myStatus = myReviewStatus(reviews, state.me);
+    const myStatus        = myReviewStatus(reviews, state.me);
+    const myReviewed      = myStatus !== null;
+
+    // Branch protection
+    const prot    = detail?.base?.ref ? await getProtection(owner, repo, detail.base.ref) : null;
+    const blocking = blockingRules(prot, approvals);
 
     // CI: workflow runs
     let ciHtml = '<span class="badge badge-neutral">No workflows found</span>';
@@ -538,24 +516,14 @@ async function loadInvited() {
       }
     }
 
-    // Branch protection
-    let blocking = [];
-    if (detail?.base?.ref) {
-      const prot = await getProtection(owner, repo, detail.base.ref);
-      blocking = blockingRules(prot, approvals);
-    }
-    const blockHtml = blocking.length
-      ? blocking.map(b => `<span class="badge badge-block" title="${esc(b)}">⚠ ${esc(b)}</span>`).join('')
-      : '<span class="badge badge-ok">✓ No blockers found</span>';
-
-    const repoFull = owner + '/' + repo;
-    const author = pr.user?.login || '?';
+    const repoFull  = owner + '/' + repo;
+    const author    = pr.user?.login || '?';
     const updatedAt = pr.updated_at || pr.created_at;
     return {
-      num: String(pr.number), repoFull,
+      num: String(pr.number), repoFull, myReviewed,
       searchText: (pr.title + ' ' + repoFull + ' ' + author).toLowerCase(),
       createdAt: pr.created_at, updatedAt,
-      html: buildInvitedCard(pr, owner, repo, author, approvals, uniqueReviewers, myStatus, ciHtml, blockHtml, updatedAt)
+      html: buildInvitedCard(pr, owner, repo, author, approvals, uniqueReviewers, myStatus, blocking, ciHtml, updatedAt)
     };
   }));
 
@@ -566,7 +534,7 @@ async function loadInvited() {
   applyFilters('invited');
 }
 
-function buildInvitedCard(pr, owner, repo, author, approvals, uniqueReviewers, myStatus, ciHtml, blockHtml, updatedAt) {
+function buildInvitedCard(pr, owner, repo, author, approvals, uniqueReviewers, myStatus, blocking, ciHtml, updatedAt) {
   const ageOld = isOld(pr.created_at) ? ' old' : '';
   const actOld = isOld(updatedAt) ? ' old' : '';
   return `<div class="pr-card" data-num="${pr.number}" data-created="${pr.created_at}" data-updated="${updatedAt}">
@@ -592,7 +560,7 @@ function buildInvitedCard(pr, owner, repo, author, approvals, uniqueReviewers, m
     </div>
     <hr class="divider"/>
     <div class="section-label">Branch protection</div>
-    <div class="check-list" style="margin-bottom:8px">${blockHtml}</div>
+    <div class="check-list" style="margin-bottom:8px">${protectionHtml(blocking)}</div>
     <div class="section-label">CI / GitHub Actions</div>
     <div class="check-list">${ciHtml}</div>
   </div>`;
@@ -624,9 +592,8 @@ function showError(msg) {
 
 $('tkn').addEventListener('keydown', e => { if (e.key === 'Enter') load(); });
 
-
 const observer = new MutationObserver(() => refreshRepoColors());
-observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+observer.observe(html, { attributes: true, attributeFilter: ['data-theme'] });
 </script>
 </body>
 </html>
