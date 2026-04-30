@@ -540,10 +540,9 @@ async function loadInvited() {
 
     // Branch protection
     let blocking = [];
-    const approvalCount = reviews.filter(r => r.state === 'APPROVED').length;
     if (detail?.base?.ref) {
       const prot = await getProtection(owner, repo, detail.base.ref);
-      blocking = blockingRules(prot, approvalCount);
+      blocking = blockingRules(prot, approvals);
     }
     const blockHtml = blocking.length
       ? blocking.map(b => `<span class="badge badge-block" title="${esc(b)}">⚠ ${esc(b)}</span>`).join('')
