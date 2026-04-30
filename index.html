@@ -494,17 +494,25 @@ async function loadInvited() {
     if (detail?.head?.sha) {
       const runs = await getWorkflowRuns(owner, repo, detail.head.sha);
       if (runs.length) {
-        // Dedupliceer: per workflow naam alleen de meest recente run tonen
         const latest = {};
         runs.forEach(run => {
           const key = run.name || run.id;
-          if (!latest[key] || new Date(run.created_at) > new Date(latest[key].created_at)) {
-            latest[key] = run;
-          }
+          if (!latest[key] || new Date(run.created_at) > new Date(latest[key].created_at)) latest[key] = run;
         });
         ciHtml = Object.values(latest).map(workflowBadge).join('');
       }
     }
+
+    // Branch protection
+    let blocking = [];
+    const approvalCount = reviews.filter(r => r.state === 'APPROVED').length;
+    if (detail?.base?.ref) {
+      const prot = await getProtection(owner, repo, detail.base.ref);
+      blocking = blockingRules(prot, approvalCount);
+    }
+    const blockHtml = blocking.length
+      ? blocking.map(b => `<span class="badge badge-block" title="${esc(b)}">⚠ ${esc(b)}</span>`).join('')
+      : '<span class="badge badge-ok">✓ No blockers found</span>';
 
     const repoFull = owner + '/' + repo;
     const author = pr.user?.login || '?';
@@ -513,7 +521,7 @@ async function loadInvited() {
       num: String(pr.number), repoFull,
       searchText: (pr.title + ' ' + repoFull + ' ' + author).toLowerCase(),
       createdAt: pr.created_at, updatedAt,
-      html: buildInvitedCard(pr, owner, repo, author, approvals, uniqueReviewers, myStatus, ciHtml, updatedAt)
+      html: buildInvitedCard(pr, owner, repo, author, approvals, uniqueReviewers, myStatus, ciHtml, blockHtml, updatedAt)
     };
   }));
 
@@ -524,7 +532,7 @@ async function loadInvited() {
   applyFilters('invited');
 }
 
-function buildInvitedCard(pr, owner, repo, author, approvals, uniqueReviewers, myStatus, ciHtml, updatedAt) {
+function buildInvitedCard(pr, owner, repo, author, approvals, uniqueReviewers, myStatus, ciHtml, blockHtml, updatedAt) {
   const ageOld = isOld(pr.created_at) ? ' old' : '';
   const actOld = isOld(updatedAt) ? ' old' : '';
   return `<div class="pr-card" data-num="${pr.number}" data-created="${pr.created_at}" data-updated="${updatedAt}">
@@ -549,6 +557,8 @@ function buildInvitedCard(pr, owner, repo, author, approvals, uniqueReviewers, m
       ${myReviewBadge(myStatus)}
     </div>
     <hr class="divider"/>
+    <div class="section-label">Branch protection</div>
+    <div class="check-list" style="margin-bottom:8px">${blockHtml}</div>
     <div class="section-label">CI / GitHub Actions</div>
     <div class="check-list">${ciHtml}</div>
   </div>`;
